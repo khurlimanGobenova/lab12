@@ -28,4 +28,22 @@ public class ProductController {
         return productRepository.findById(id).orElseThrow(()->
                 new RuntimeException("Not␣Found"));
     }
+    @PutMapping("/{id}")
+    public Product updateProduct(@PathVariable Long id, @RequestBody Product product) {
+        Product existingProduct = productRepository.findById(id).orElseThrow(() ->
+                new RuntimeException("Not Found"));
+
+        existingProduct.setName(product.getName());
+        existingProduct.setPrice(product.getPrice());
+
+        return productRepository.save(existingProduct);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
+        Product product = productRepository.findById(id).orElseThrow(() ->
+                new RuntimeException("Not Found"));
+        productRepository.delete(product);
+        return ResponseEntity.ok().build();
+    }
 }
